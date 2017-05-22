@@ -40,15 +40,19 @@ function myTweets(){
     });
 }
 
-
 function mySpotify(){
     var song = process.argv[3];
     request("https://api.spotify.com/v1/search?q=" + song + "&type=track&limit=1", function(error, data) {
         if(error) {
             console.log(error);
         } else {
-            var songInfo = JSON.stringify(JSON.parse(data.body[0]));
-            console.log(songInfo);
+            var songInfo = JSON.parse(data.body);
+            console.log("========================================")
+            console.log("Artist: " + songInfo.tracks.items[0].artists[0].name);
+            console.log("Album: " + songInfo.tracks.items[0].album.name);
+            console.log("Song: " + songInfo.tracks.items[0].name);
+            console.log("Preview URL: " + songInfo.tracks.items[0].preview_url);
+            console.log("========================================")
         }
     });
 }
@@ -62,6 +66,7 @@ function myMovieThis(){
 
         // print out the movie info
         var movieInfo = JSON.parse(body);
+        console.log("========================================")
         console.log("Title: " + movieInfo.Title);
         console.log("Year: " + movieInfo.Year);
         console.log("IMDB Rating: " + movieInfo.imdbRating);
@@ -70,6 +75,7 @@ function myMovieThis(){
         console.log("Plot: " + movieInfo.Plot);
         console.log("Actors: " + movieInfo.Actors);
         console.log("Rotten Tomatoes: " + movieInfo.Ratings[1].Value);
+        console.log("========================================")
     }
     });
 }
