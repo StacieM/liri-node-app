@@ -39,20 +39,33 @@ function myTweets(){
 }
 
 function mySpotify(){
+    if(args == ''){
+        args = 'The Sign Ace of Base';
+    }
+    var songInfo;
+    var spotifyDefaultURL = "https://api.spotify.com/v1/search?q=the%20sign%20ace%20of%20base&type=track&limit=1"
     var spotifyURL = "https://api.spotify.com/v1/search?q=" + args + "&type=track&limit=1";
     request(spotifyURL, function(error, data) {
+        songInfo = JSON.parse(data.body);
         if(error) {
-            console.log(error);
+            console.log('Error from Spotify: ' + error);
+        } else if(songInfo.tracks.items[0] === undefined){
+            request(spotifyDefaultURL, function(error, data) {
+                songInfo = JSON.parse(data.body);
+                printSong();
+            });
         } else {
-            var songInfo = JSON.parse(data.body);
-            console.log("\n\n========================================");
-            console.log("Artist: " + songInfo.tracks.items[0].artists[0].name);
-            console.log("Album: " + songInfo.tracks.items[0].album.name);
-            console.log("Song: " + songInfo.tracks.items[0].name);
-            console.log("Preview URL: " + songInfo.tracks.items[0].preview_url);
-            console.log("========================================\n\n");
+            printSong();
         }
-    });
+    })
+    function printSong() {
+        console.log("\n\n========================================");
+        console.log("Artist: " + songInfo.tracks.items[0].artists[0].name);
+        console.log("Album: " + songInfo.tracks.items[0].album.name);
+        console.log("Song: " + songInfo.tracks.items[0].name);
+        console.log("Preview URL: " + songInfo.tracks.items[0].preview_url);
+        console.log("========================================\n\n");
+    }
 }
 
 function myMovieThis(){
@@ -62,8 +75,6 @@ function myMovieThis(){
     var movieInfo;
     var movieDefaultURL = "http://www.omdbapi.com/?i=tt3896198&apikey=9471f43e&t=Mr%20Nobody&plot=full&tomatoes=true&r=json";
     var movieURL = "http://www.omdbapi.com/?i=tt3896198&apikey=9471f43e&t=" + args + "&plot=full&tomatoes=true&r=json";
-    console.log('Args in Movie function = ' + args);
-    console.log('URL for search: ' + encodeURI(movieURL));
     request(movieURL, function(error, response, body) {
         movieInfo = JSON.parse(body);
         console.log('movieInfo.Response: ' + movieInfo.Response);
