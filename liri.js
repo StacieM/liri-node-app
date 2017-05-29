@@ -9,8 +9,6 @@ var args = '';
 for (var i = 3; i < process.argv.length; i++) {
     args += process.argv[i] + ' ';
 }
-console.log('Args = ' + args);
-
   
 function myTweets(){
     var client = new Twitter({
@@ -77,7 +75,6 @@ function myMovieThis(){
     var movieURL = "http://www.omdbapi.com/?i=tt3896198&apikey=9471f43e&t=" + args + "&plot=full&tomatoes=true&r=json";
     request(movieURL, function(error, response, body) {
         movieInfo = JSON.parse(body);
-        console.log('movieInfo.Response: ' + movieInfo.Response);
     if(error) {
         console.log('Error from OMDB: ' + error);
     } else if(movieInfo.Response == 'False') {
@@ -100,7 +97,6 @@ function myMovieThis(){
         console.log("Actors: " + movieInfo.Actors);
         console.log("Rotten Tomatoes: " + movieInfo.tomatoURL);
         console.log("========================================\n\n");
-        console.log(movieInfo.Response);
     }
 }
 
@@ -109,18 +105,15 @@ function myDoWhatItSays(){
         if (err) {
             return console.log(err);
         }
-        var output = data.split(",");
-        console.log('Random first piece: ' + output[0]);
-        console.log('Random second piece: ' + output[1]);
-        
+        var output = data.split(",");        
         if (output[0] === "my-tweets"){
             myTweets();
         } else if (output[0] === "spotify-this-song"){
             args = output[1];
             mySpotify(); 
         } else if (output[0] === "movie-this"){
-            myMovieThis();
             args = output[1];
+            myMovieThis();
         } 
     });
 }
